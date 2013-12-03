@@ -65,8 +65,51 @@ I'll be adding sub headings to each of the major sections above with bullets on 
 
 */
 
+function animate (selector, attributes, duration) {
+	//add a default duration as it wasn't specified in the question
+	duration = typeof duration !== 'undefined' ? duration : 1000;
+	
+	//log some shizzle to see it all working
+	log('selector: ' + selector)
+
+	for (property in attributes) {
+		log(property + ': ' + attributes[property])		
+	}
+	
+	log('duration: ' + duration)
+
+	//we need to determine what the selector is and how it specific it is
+	//lets chuck this into it's own function
+	var elements = parseSelector(selector)
+
+	log(elements)
+}
+
+function parseSelector (selector) {
+	// take a selector, split it into it's parts, and then find any matching
+	// elements and return them (possibly as objects)
+
+	// we have two tools:
+		//document.getElementByID()
+		//document.getElementByTagName()
+
+	var selectors = selector.split(" ")
+	for (selector in selectors) {
+		if (selector.charAt(0) == '#') {
+			
+		} else if (selector.charAt(0) == '.') {
+			selector.category = 'class'
+		} else {
+			selector.category = 'tag'
+		}
+	}
+	log('selectors: ' + selectors)
+
+	return selectors;
+}
 
 
+animate('#main .boxy', {width:200, height:300}, 500);
 
 
 
