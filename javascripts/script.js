@@ -83,6 +83,8 @@ function animate (selector, attributes, duration) {
 	var elements = parseSelector(selector)
 	log('elements == ' + elements)
 	elements[0].style['background-color'] = 'black'; //testing it worked
+
+	// next step is to create a new Object (class) for each element to affect.
 }
 
 function parseSelector (selector, scopeElements) {
