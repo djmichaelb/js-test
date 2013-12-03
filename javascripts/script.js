@@ -42,8 +42,20 @@ preferrable to less in terms of the functions capabilities.
 
 1. It seems we need a way to determine the exact element or elements to animate
 (and that this should allow for more than one element as the result - a list perhaps).
+	a.	Determine if the element we are looking for is by ID, Class, or Tag
+	b.	If not by ID, determine if we can refine our search using more information
+	c.	create a list of all the elements that match the selectors provided
 
-2. We then need to get the properties that we need to effect (multiple).
+
+
+2. We then need to get the properties that we need to affect (multiple).
+	a. Step through each of the properties provided in the function call and create list
+	b. possibly do some funky logic in here to determine the type of property we are
+	   looking to animate so we can do some error checking for incorrect values provided etc
+	c. Fetch the current values for those properties for each element in our list
+		looks like it's time to start working with objects and classes!!!
+	d. return a list of all the elements with their properties to be animated and the values
+	   required to get that job done.
 
 3. We'll need to call requestAnimationFrame and varieties of this on the browser window
 to actually animate the frames. There was no duration for the example given for the animation
@@ -52,6 +64,7 @@ so we will need to provide a default as well as some possible API defaults for u
 I'll be adding sub headings to each of the major sections above with bullets on the steps.
 
 */
+
 
 
 
