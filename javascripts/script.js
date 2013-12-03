@@ -81,35 +81,70 @@ function animate (selector, attributes, duration) {
 	//we need to determine what the selector is and how it specific it is
 	//lets chuck this into it's own function
 	var elements = parseSelector(selector)
-
-	log(elements)
+	log('elements == ' + elements)
+	elements[0].style['background-color'] = 'black'; //testing it worked
 }
 
-function parseSelector (selector) {
+function parseSelector (selector, scopeElements) {
+	log('######## LOOP ########')
 	// take a selector, split it into it's parts, and then find any matching
 	// elements and return them (possibly as objects)
+	scopeElements = typeof scopeElements !== 'undefined' ? scopeElements : [document];
+	log('scope: ' + scopeElements);
+	var matchElements = []
+	selectorArray = selector.split(" ")
+	var current = selectorArray[0];
 
-	// we have two tools:
-		//document.getElementByID()
-		//document.getElementByTagName()
-
-	var selectors = selector.split(" ")
-	for (selector in selectors) {
-		if (selector.charAt(0) == '#') {
-			
-		} else if (selector.charAt(0) == '.') {
-			selector.category = 'class'
+	for (element in scopeElements) {
+		log('## CHECKING ELEMENT ##')
+		log('# looking for: ' + current + ' #')
+		
+		// step through each element and fetch the matching element from the selector
+		var elem = scopeElements[element];
+		if (current.charAt(0) == '#') {
+			// fetch the element by ID
+			log('# getByID #')
+			matchElements.push(elem.getElementById(current.substring(1)));
+		
+		} else if (current.charAt(0) == '.') {
+			//fetch elements with matching tags
+			//will need to add more advanced filtering at a later date
+			//for example #main.boxy (tag with id AND class)
+			//would also need to add pseudo filtering at some point :first-child etc...
+			log('# getByClass #')
+			var elementsToFilter = elem.getElementsByTagName('*'), i;
+		    for (i in elementsToFilter) {
+		        log(elementsToFilter[i])
+		        if((' ' + elementsToFilter[i].className + ' ').indexOf(' ' + current.substring(1) + ' ') > -1) {
+		            matchElements.push(elementsToFilter[i]);
+		        }
+			}
 		} else {
-			selector.category = 'tag'
+			//fetch the element by tag
+			foundTags = elem.getElementsByTagName(current), i = 0;
+			while (i < foundTags.length) {
+				matchElements.push(foundTags[i]);
+				i++
+			}
 		}
 	}
-	log('selectors: ' + selectors)
 
-	return selectors;
+	log('matchElements: ' + matchElements)
+
+	// need to recurse through the document narrowing the elements each step
+	if (selectorArray.length == 1) {
+		log('!! returning: ' + matchElements[0])
+		return matchElements;
+	} else {
+		newSelector = selectorArray.splice(1, Number.MAX_VALUE).toString().replace(',', ' ');
+		log('!! looping again');
+		log(' ');
+		return parseSelector(newSelector, matchElements);
+	}
 }
 
 
-animate('#main .boxy', {width:200, height:300}, 500);
+animate('#main .boxy span', {width:200, height:300}, 500);
 
 
 
