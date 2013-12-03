@@ -104,6 +104,16 @@ body, select, input, textarea { color: #222222; }
 
 body { padding: 2em; }
 
+.boxy { float: left; margin-right: 1em; height: 80px; width: 80px; border: 1px solid black; }
+
+.blue { background: blue; }
+
+.red { background: red; }
+
+.green { background: green; }
+
+.orange { background: orange; }
+
 .ir { background-color: transparent; background-repeat: no-repeat; border: 0; direction: ltr; display: block; overflow: hidden; text-align: left; text-indent: -999em; }
 .ir br { display: none; }
 
