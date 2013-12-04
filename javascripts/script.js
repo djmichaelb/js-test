@@ -98,21 +98,12 @@ function animate (selector, attributes, duration) {
 		//log('targetTime: ' + targetTime);
 		if (timeNow <= targetTime) { // animation is still running
 			for (element in elements) {
-				current = elements[element]
-				for (prop in current.targetProps) {
-					//set all properties to target size
-					current.el.style[prop] =  current.startingProps[prop] + (current.velocity[prop] * delta) + 'px'
-				}
+				elements[element].setElement(delta);
 			}
 			requestAnimationFrame(animateAll);
 		} else { //we've gone over our animation time
 			for (element in elements) {
-				current = elements[element]
-				for (prop in current.targetProps) {
-					//set all properties to target size
-					log(current.targetProps[prop])
-					current.el.style[prop] = current.targetProps[prop] + 'px'; 
-				}
+				elements[element].setElement();
 			}
 		}
 	}
@@ -172,7 +163,10 @@ function AnimEl(el, targetProps, duration) {
 	this.startingProps = {}; //starting property sizes / lengths etc
 	this.velocity = {}; //pixel change per millisecond for the animation
 	for (prop in targetProps) {
-		this.startingProps[prop] = el[this.propertyMethod(prop)];
+		//getComputedStyle better results, less compatible. look into this further
+		this.startingProps[prop] = parseInt(getComputedStyle(el,null)[prop]) 
+		//old method using outerWidth in the propertyMap and code below.
+		//this.startingProps[prop] = el[this.propertyMethod(prop)];
 		this.velocity[prop] = (this.targetProps[prop] - this.startingProps[prop]) / this.duration;
 	}
 }
@@ -198,13 +192,29 @@ AnimEl.prototype.propertyMethod = function(property) {
 	// given a certain property, this method returns the
 	// javascript method to use 
 	var propertyMap = {
-		'width': 'offsetWidth', //includes borders and padding, sadly
-		'height': 'offsetHeight' //includes borders and padding, sadly
+		'width': 'width', //includes borders and padding, sadly //no longer true
+		'height': 'height' //includes borders and padding, sadly
 	}
 	return propertyMap[property]
 }
 AnimEl.prototype.animateElement = function(timestamp) {
 	return
+}
+AnimEl.prototype.setElement = function(delta) {
+	if (typeof delta === 'undefined') {
+		for (prop in this.targetProps) {
+			//set all properties to target size
+			this.el.style[prop] = this.targetProps[prop] + 'px'; 
+		}		
+	} else {
+		for (prop in this.targetProps) {
+			//set all properties to target size
+			log('start: ' + this.startingProps['width'] + ', target: ' + this.targetProps['width']);
+			if (this.startingProps[prop] !== this.targetProps[prop]) {
+				this.el.style[prop] =  Math.round(this.startingProps[prop] + (this.velocity[prop] * delta)) + 'px'
+			}
+		}
+	}
 }
 
 function makeAnimEl(el, targetProps, duration) {
