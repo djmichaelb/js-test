@@ -104,9 +104,18 @@ body, select, input, textarea { color: #222222; }
 
 body { padding: 2em; }
 
-.boxy { float: left; margin-right: 1em; height: 80px; width: 80px; border: 1px solid black; }
+#main { margin-bottom: 20px; min-height: 400px; }
 
-.blue { background: blue; }
+#animateSettings { display: block; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #333; }
+#animateSettings .fieldgroup { padding: 5px; width: 200px; }
+#animateSettings .fieldgroup input { width: 100%; }
+#animateSettings .inline { float: left; }
+#animateSettings .short { width: 90px; margin-right: 5px; }
+#animateSettings label { display: block; }
+
+.boxy { float: left; margin-right: 1em; height: 100px; width: 100px; border: 1px solid black; }
+
+.blue { background: #75d5ef; }
 
 .red { background: red; }
 

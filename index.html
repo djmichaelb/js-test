@@ -18,22 +18,46 @@
   <body>
     <div id='container'>
       <header></header>
-      <div id='main' role='main'>
+      <div id='main' role='main' class="clearfix">
         <!-- Canvas for testing -->
         <h1>Mathspace Javascript Test</h1>
+        <form id="animateSettings" name="animateSettings" onsubmit="return makeAnimate()">
+          <div class="fieldgroup">
+            <label for="selector">Selector:</label>
+            <input type="text" id="selector" name="selector" value="#main .even">
+          </div>
+          <div class="fieldgroup short inline">
+            <label for="width">Width:</label>
+            <input type="number" id="width" name="animWidth" value="300">
+          </div>
+          <div class="fieldgroup short inline">
+            <label for="height">Height:</label>
+            <input type="number" id="height" name="animHeight" value="300">
+          </div>
+          <div class="fieldgroup">
+            <input type="submit" value="Animate">
+          </div>
+        </form>
         <div id="element-01" class="boxy blue">
-          <span>Element 01</span>
+          <h2>01</h2>
+          <p>#element-01<br>
+            .boxy.blue</p>
         </div>
         <div id="element-02" class="boxy even red">
-          Element 02
+          <h2>02</h2>
+          <p>#element-02<br>
+            .boxy.even.red</p>
         </div>
         <div id="element-03" class="boxy green">
-          Element 03
+          <h2>03</h2>
+          <p>#element-01<br>
+            .boxy.green</p>
         </div>
         <div id="element-04" class="boxy even orange">
-          Element 04
+          <h2>04</h2>
+          <p>#element-01<br>
+            .boxy.even.orange</p>
         </div>
-        <a href="#">Click to trigger animation</a>
       </div>
       <footer></footer>
     </div>

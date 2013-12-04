@@ -68,32 +68,63 @@ I'll be adding sub headings to each of the major sections above with bullets on 
 function animate (selector, attributes, duration) {
 	//add a default duration as it wasn't specified in the question
 	duration = typeof duration !== 'undefined' ? duration : 1000;
-	
-	//log some shizzle to see it all working
-	log('selector: ' + selector)
 
-	for (property in attributes) {
-		log(property + ': ' + attributes[property])		
-	}
-	
-	log('duration: ' + duration)
+	window.requestAnimationFrame = window.requestAnimationFrame || 
+								   window.mozRequestAnimationFrame ||
+	                               window.webkitRequestAnimationFrame || 
+	                               window.msRequestAnimationFrame;
 
 	//we need to determine what the selector is and how it specific it is
 	//lets chuck this into it's own function
-	var elements = parseSelector(selector)
-	log('elements == ' + elements)
+	var elements = parseSelector(selector) //array of all elements to animate
 	
+	// next step is to create a new Object (class) for each element to affect.
 	for (element in elements) {
-		elements[element].style['background-color'] = 'black'
+		elements[element] = makeAnimEl(elements[element], attributes, duration)
+	}
+	log(elements); //done
+
+	// quick and dirty code to render the exact example in the question above
+	// will implement more featured code shortly
+	var startTime = null;
+
+	function animateAll(timeNow) {
+		startTime = startTime === null ? timeNow : startTime;
+		var targetTime = startTime + duration;
+
+		var delta = timeNow - startTime;
+		log('timeNow: ' + timeNow);
+		//log('startTime: ' + startTime);
+		//log('targetTime: ' + targetTime);
+		if (timeNow <= targetTime) { // animation is still running
+			for (element in elements) {
+				current = elements[element]
+				for (prop in current.targetProps) {
+					//set all properties to target size
+					current.el.style[prop] =  current.startingProps[prop] + (current.velocity[prop] * delta) + 'px'
+				}
+			}
+			requestAnimationFrame(animateAll);
+		} else { //we've gone over our animation time
+			for (element in elements) {
+				current = elements[element]
+				for (prop in current.targetProps) {
+					//set all properties to target size
+					log(current.targetProps[prop])
+					current.el.style[prop] = current.targetProps[prop] + 'px'; 
+				}
+			}
+		}
 	}
 
-	// next step is to create a new Object (class) for each element to affect.
+	requestAnimationFrame(animateAll);
+
 }
 
 function parseSelector (selector, scopeElements) {
 	scopeElements = typeof scopeElements !== 'undefined' ? scopeElements : [document];
-	var matchElements = []
-	selectorArray = selector.split(" ")
+	var matchElements = [];
+	var selectorArray = selector.split(" ");
 	var current = selectorArray[0];
 
 	for (element in scopeElements) {		
@@ -134,8 +165,64 @@ function parseSelector (selector, scopeElements) {
 	}
 }
 
+function AnimEl(el, targetProps, duration) {
+	this.el = el; //element to mess with
+	this.targetProps = targetProps; //desired size / length of properties
+	this.duration = duration; //length of the animation in milliseconds
+	this.startingProps = {}; //starting property sizes / lengths etc
+	this.velocity = {}; //pixel change per millisecond for the animation
+	for (prop in targetProps) {
+		this.startingProps[prop] = el[this.propertyMethod(prop)];
+		this.velocity[prop] = (this.targetProps[prop] - this.startingProps[prop]) / this.duration;
+	}
+}
+/* Consider using the getStyle function for styled elements, but it may return default values
+AnimEl.prototype.getStyle = function(elem, name) {
+    if (elem.style[name]) {
+        return elem.style[name];
+    } else if (elem.currentStyle) {
+        return elem.currentStyle[name];
+    }
+    else if (document.defaultView && document.defaultView.getComputedStyle) {
+        name = name.replace(/([A-Z])/g, "-$1");
+        name = name.toLowerCase();
+        s = document.defaultView.getComputedStyle(elem, "");
+        return s && s.getPropertyValue(name);
+    } else {
+        return null;
+    }
+}
+*/
 
-animate('#main .boxy span', {width:200, height:300}, 500);
+AnimEl.prototype.propertyMethod = function(property) {
+	// given a certain property, this method returns the
+	// javascript method to use 
+	var propertyMap = {
+		'width': 'offsetWidth', //includes borders and padding, sadly
+		'height': 'offsetHeight' //includes borders and padding, sadly
+	}
+	return propertyMap[property]
+}
+AnimEl.prototype.animateElement = function(timestamp) {
+	return
+}
+
+function makeAnimEl(el, targetProps, duration) {
+	var instance = new AnimEl(el, targetProps, duration);
+	return instance;
+}
+
+
+function makeAnimate() {
+	selectors = document.animateSettings.selector.value;
+	width = parseInt(document.animateSettings.animWidth.value);
+	height = parseInt(document.animateSettings.animHeight.value);
+
+	animate(selectors, {'width':width, 'height':height}, 500);
+	
+	return false;
+}
+
 
 
 

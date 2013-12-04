@@ -20,17 +20,42 @@ body {padding:2em}
 
 header {}
 
-#main {}
-
+#main {
+	margin-bottom:20px;
+	min-height:400px;
+}
+#animateSettings {
+	display:block;
+	margin-bottom:20px;
+	padding-bottom:10px;
+	border-bottom:1px solid #333;
+	.fieldgroup {
+		padding:5px;
+		width:200px;
+		input {
+			width:100%;
+		}
+	}
+	.inline {
+		float:left;
+	}
+	.short {
+		width:90px;
+		margin-right:5px;
+	}
+	label {
+		display:block;
+	}
+}
 .boxy {
 	float:left;
 	margin-right:1em;
-	height:80px;
-	width:80px;
+	height:100px;
+	width:100px;
 	border:1px solid rgba(0, 0, 0, 1);
 }
 .blue {
-	background:blue;
+	background:#75d5ef;
 }
 .red {
 	background:red;
