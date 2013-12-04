@@ -91,39 +91,21 @@ function animate (selector, attributes, duration) {
 }
 
 function parseSelector (selector, scopeElements) {
-	log('######## LOOP ########')
-	// take a selector, split it into it's parts, and then find any matching
-	// elements and return them (possibly as objects)
 	scopeElements = typeof scopeElements !== 'undefined' ? scopeElements : [document];
-	log('scope: ' + scopeElements);
 	var matchElements = []
 	selectorArray = selector.split(" ")
 	var current = selectorArray[0];
 
-	for (element in scopeElements) {
-		log('## CHECKING ELEMENT ##')
-		log('# looking for: ' + current + ' #')
-		
-		// step through each element and fetch the matching element from the selector
+	for (element in scopeElements) {		
 		var elem = scopeElements[element];
 		if (current.charAt(0) == '#') {
-			// fetch the element by ID
-			log('# getByID #')
 			matchElements.push(elem.getElementById(current.substring(1)));
 		
 		} else if (current.charAt(0) == '.') {
-			//fetch elements with matching tags
-			//will need to add more advanced filtering at a later date
-			//for example #main.boxy (tag with id AND class)
-			//would also need to add pseudo filtering at some point :first-child etc...
-			log('# getByClass #')
 			var classToSearch = current.substring(1).split('.');
-			log('class: ' + classToSearch.length);
 			var elementsToFilter = elem.getElementsByTagName('*');
 		    for (i=0; i < elementsToFilter.length; i++) {
 		        var numMatch = 0;
-		        log('element: ' + elementsToFilter[i]);
-		        log('elementClass: ' + elementsToFilter[i].className);
 		        for (x in classToSearch) {
 		        	if((' ' + elementsToFilter[i].className + ' ').indexOf(' ' + classToSearch[x] + ' ') > -1) {
 		            	numMatch ++;
@@ -143,16 +125,11 @@ function parseSelector (selector, scopeElements) {
 		}
 	}
 
-	log('matchElements: ' + matchElements)
-
 	// need to recurse through the document narrowing the elements each step
-	if (selectorArray.length == 1) {
-		log('!! returning: ' + matchElements[0])
+	if (selectorArray.length <= 1) {
 		return matchElements;
 	} else {
 		newSelector = selectorArray.splice(1, Number.MAX_VALUE).toString().replace(',', ' ');
-		log('!! looping again');
-		log(' ');
 		return parseSelector(newSelector, matchElements);
 	}
 }
