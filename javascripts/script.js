@@ -82,7 +82,10 @@ function animate (selector, attributes, duration) {
 	//lets chuck this into it's own function
 	var elements = parseSelector(selector)
 	log('elements == ' + elements)
-	elements[0].style['background-color'] = 'black'; //testing it worked
+	
+	for (element in elements) {
+		elements[element].style['background-color'] = 'black'
+	}
 
 	// next step is to create a new Object (class) for each element to affect.
 }
@@ -114,11 +117,20 @@ function parseSelector (selector, scopeElements) {
 			//for example #main.boxy (tag with id AND class)
 			//would also need to add pseudo filtering at some point :first-child etc...
 			log('# getByClass #')
-			var elementsToFilter = elem.getElementsByTagName('*'), i;
-		    for (i in elementsToFilter) {
-		        log(elementsToFilter[i])
-		        if((' ' + elementsToFilter[i].className + ' ').indexOf(' ' + current.substring(1) + ' ') > -1) {
-		            matchElements.push(elementsToFilter[i]);
+			var classToSearch = current.substring(1).split('.');
+			log('class: ' + classToSearch.length);
+			var elementsToFilter = elem.getElementsByTagName('*');
+		    for (i=0; i < elementsToFilter.length; i++) {
+		        var numMatch = 0;
+		        log('element: ' + elementsToFilter[i]);
+		        log('elementClass: ' + elementsToFilter[i].className);
+		        for (x in classToSearch) {
+		        	if((' ' + elementsToFilter[i].className + ' ').indexOf(' ' + classToSearch[x] + ' ') > -1) {
+		            	numMatch ++;
+		        	}
+		        }
+		        if (numMatch == classToSearch.length) {
+		        	matchElements.push(elementsToFilter[i]);
 		        }
 			}
 		} else {
@@ -126,7 +138,7 @@ function parseSelector (selector, scopeElements) {
 			foundTags = elem.getElementsByTagName(current), i = 0;
 			while (i < foundTags.length) {
 				matchElements.push(foundTags[i]);
-				i++
+				i++;
 			}
 		}
 	}
